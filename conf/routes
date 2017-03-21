@@ -6,6 +6,8 @@
 GET     /                           controllers.HomeController.index
 
 GET     /test                       controllers.TestController.test
+POST    /login                      controllers.account.UserController.login
+POST    /autologin                  controllers.account.UserController.autoLogin
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count
