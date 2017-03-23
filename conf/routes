@@ -3,11 +3,13 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
+GET     /                               controllers.HomeController.index
 
-GET     /test                       controllers.TestController.test
-POST    /login                      controllers.account.UserController.login
-POST    /autologin                  controllers.account.UserController.autoLogin
+GET     /test                           controllers.TestController.test
+POST    /login                          controllers.account.UserController.login
+POST    /autologin                      controllers.account.UserController.autoLogin
+
+GET     /monthly_journal/:year/:month   controllers.tax_info.MonthlyJournalController.getSchedules(year:Int, month: Int)
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count
