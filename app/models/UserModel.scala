@@ -40,6 +40,25 @@ class UserModel @Inject()(db: Database, security: Security, common: Common) {
     setAuthToken(user_id)
   }
 
+  // 사용자 인증 - 성공하면 사용자 정보 반환
+  def authenticate(selector: String, validator: String):Map[String, Any] = {
+    var result = List[Map[String, Any]]()
+    var toReturn = Map[String, Any]()
+    val checkIdPwQuery =
+      f"""SELECT * FROM auth_token WHERE selector = '$selector%s'"""
+    db.withConnection{implicit conn =>
+      result = SQL(checkIdPwQuery.stripMargin).as(parser.*)
+    }
+    if (result.length == 0 || result(0)("auth_token.token") != security.sha256Hashing(validator) || result(0)("auth_token.expires").toString < common.getDateFromToday(0)) {
+      toReturn = common.returnSuccessResult(false)
+      toReturn
+    } else {
+      toReturn = common.returnSuccessResult(true)
+      toReturn += "account" -> result(0)
+      toReturn
+    }
+  }
+
 //  쿠키의 selector와 validator로 실행하는 자동 로그인
   def autoLogin(selector: String, validator: String): Map[String, Any] = {
     var result = List[Map[String, Any]]()
