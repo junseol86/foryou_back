@@ -21,11 +21,20 @@ class MonthlyJournalController @Inject()(monthlyJournalModel: MonthlyJournalMode
     Ok(Json(formats).write(result))
   }
 
-  def addSchedule = Action { request =>
+  def addASchedule = Action { request =>
     def fp = new common.FromPost(request)
     var result = Map[String, Any]()
     result += "data" ->
       monthlyJournalModel.addSchedule(fp.get("year").toInt, fp.get("month").toInt, fp.get("date").toInt, fp.get("content"), fp.get("selector"), fp.get("validator"))
     Ok(Json(formats).write(result))
   }
+
+  def deleteASchedule = Action { request =>
+    def fp = new common.FromPost(request)
+    var result = Map[String, Any]()
+    result += "data" ->
+      monthlyJournalModel.deleteASchedule(fp.get("year").toInt, fp.get("month").toInt, fp.get("date").toInt, fp.get("id").toInt, fp.get("selector"), fp.get("validator"))
+    Ok(Json(formats).write(result))
+  }
+
 }

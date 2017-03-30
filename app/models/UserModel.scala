@@ -96,7 +96,7 @@ class UserModel @Inject()(db: Database, security: Security, common: Common) {
     val deleteAuthTokenQuery =
       f"""DELETE FROM auth_token WHERE user_id = '$user_id%s'"""
     db.withConnection{implicit conn =>
-      SQL(deleteAuthTokenQuery.stripMargin).executeUpdate()
+      SQL(deleteAuthTokenQuery.stripMargin).execute()
     }
     //    selector와 validator 생성
     val selector = createUniqueSelector

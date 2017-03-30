@@ -9,7 +9,6 @@ import javax.inject._
 import anorm.{RowParser, SqlParser, _}
 import play.api.db._
 import utils._
-import models.UserModel
 
 class MonthlyJournalModel @Inject()(db: Database, common: Common, userModel: UserModel) {
 
@@ -35,11 +34,8 @@ class MonthlyJournalModel @Inject()(db: Database, common: Common, userModel: Use
       return common.returnSuccessResult(false)
     }
 
-    println(authentication.toString)
-    println(common.getDateFromToday(0))
-
     val account: Map[String, String] = authentication("account").asInstanceOf[Map[String, String]]
-    var insertResult: Any = null;
+    var insertResult: Any = null
     db.withConnection { implicit conn =>
       insertResult =
         SQL(
@@ -58,7 +54,6 @@ class MonthlyJournalModel @Inject()(db: Database, common: Common, userModel: Use
     }
 
     val schedules = getASchedule(year, month, date)
-
     var toReturn = common.returnSuccessResult(true)
     toReturn += "schedules" -> schedules
     toReturn
@@ -72,5 +67,21 @@ class MonthlyJournalModel @Inject()(db: Database, common: Common, userModel: Use
       return  SQL(getSchedulesQuery.stripMargin).as(parser.*)
     }
   }
+
+//  특정 날짜에서 특정 일정 지우기
+  def deleteASchedule(year: Int, month: Int, date: Int, id: Int, selector: String, validator: String): Map[String, Any] = {
+    val authentication = userModel.authenticate(selector, validator)
+    if (authentication("success") == true) {
+      db.withConnection{ implicit  conn =>
+        SQL(f"""DELETE FROM monthly_journal WHERE id = $id%d""".stripMargin).execute()
+      }
+    }
+
+    val schedules = getASchedule(year, month, date)
+    var toReturn = common.returnSuccessResult(true)
+    toReturn += "schedules" -> schedules
+    toReturn
+  }
+
 }
 

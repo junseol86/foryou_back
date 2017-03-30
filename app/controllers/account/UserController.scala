@@ -37,4 +37,15 @@ class UserController @Inject()(userModel: UserModel, common: Common) extends Con
     Ok(Json(formats).write(result))
   }
 
+  def authenticate = Action { request =>
+    def fp = new common.FromPost(request)
+    val selector = fp.get("selector")
+    val validator = fp.get("validator")
+
+    var result = Map[String, Any]()
+    result += "data" -> userModel.authenticate(selector, validator)
+
+    Ok(Json(formats).write(result))
+  }
+
 }

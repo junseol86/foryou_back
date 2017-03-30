@@ -3,14 +3,22 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                               controllers.HomeController.index
+GET     /                                   controllers.HomeController.index
 
-GET     /test                           controllers.TestController.test
-POST    /login                          controllers.account.UserController.login
-POST    /autologin                      controllers.account.UserController.autoLogin
+POST    /authenticate                       controllers.account.UserController.authenticate
 
-GET     /monthly_journal/:year/:month   controllers.tax_info.MonthlyJournalController.getSchedules(year:Int, month: Int)
-POST    /monthly_journal/add_schedule   controllers.tax_info.MonthlyJournalController.addSchedule
+GET     /test                               controllers.TestController.test
+POST    /login                              controllers.account.UserController.login
+PUT     /autologin                          controllers.account.UserController.autoLogin
+
+GET     /monthly_journal/:year/:month       controllers.tax_info.MonthlyJournalController.getSchedules(year:Int, month: Int)
+POST    /monthly_journal/add_schedule       controllers.tax_info.MonthlyJournalController.addASchedule
+PUT     /monthly_journal/delete_schedule    controllers.tax_info.MonthlyJournalController.deleteASchedule
+
+GET     /online_consulting/faq/:page        controllers.online_consulting.FaqController.getFaqs(page: Int)
+PUT     /online_consulting/faq/add          controllers.online_consulting.FaqController.addFaq
+PATCH   /online_consulting/faq/modify       controllers.online_consulting.FaqController.modifyFaq
+PUT     /online_consulting/faq/delete       controllers.online_consulting.FaqController.deleteFaq
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count
