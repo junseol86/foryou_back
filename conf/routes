@@ -11,6 +11,11 @@ GET     /test                               controllers.TestController.test
 POST    /login                              controllers.account.UserController.login
 PUT     /autologin                          controllers.account.UserController.autoLogin
 
+GET     /detail/:table/:id                  controllers.CommonController.getDetail(table: String, id: Int)
+
+GET     /fields/:submenu/:page/:search      controllers.fields.FieldsController.getFields(submenu: String, page: Int, search: String)
+POST    /fields/write                       controllers.fields.FieldsController.writeFields
+
 GET     /monthly_journal/:year/:month       controllers.tax_info.MonthlyJournalController.getSchedules(year:Int, month: Int)
 POST    /monthly_journal/add_schedule       controllers.tax_info.MonthlyJournalController.addASchedule
 PUT     /monthly_journal/delete_schedule    controllers.tax_info.MonthlyJournalController.deleteASchedule

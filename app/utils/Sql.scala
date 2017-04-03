@@ -47,6 +47,16 @@ class Sql @Inject()(db: Database, common: Common) {
     result
   }
 
+  def getDetail(table: String, id: Int): Map[String, Any] = {
+    var result = List[Map[String, Any]]()
+    val getDetailQuery =
+      f"""SELECT * FROM $table%s WHERE id = $id%d"""
+    db.withConnection{implicit conn =>
+      result = SQL(getDetailQuery.stripMargin).as(parser.*)
+    }
+    result(0)
+  }
+
   def deleteAContent(table: String, id: Int): Int = {
     db.withConnection { implicit conn =>
       SQL(
