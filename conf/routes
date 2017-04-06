@@ -15,15 +15,24 @@ GET     /detail/:table/:id                  controllers.CommonController.getDeta
 
 GET     /fields/:submenu/:page/:search      controllers.fields.FieldsController.getFields(submenu: String, page: Int, search: String)
 POST    /fields/write                       controllers.fields.FieldsController.writeFields
+PATCH   /fields/modify                      controllers.fields.FieldsController.modifyFields
+PUT     /fields/delete                      controllers.fields.FieldsController.deleteFields
 
 GET     /monthly_journal/:year/:month       controllers.tax_info.MonthlyJournalController.getSchedules(year:Int, month: Int)
 POST    /monthly_journal/add_schedule       controllers.tax_info.MonthlyJournalController.addASchedule
 PUT     /monthly_journal/delete_schedule    controllers.tax_info.MonthlyJournalController.deleteASchedule
 
-GET     /online_consulting/faq/:page        controllers.online_consulting.FaqController.getFaqs(page: Int)
-PUT     /online_consulting/faq/add          controllers.online_consulting.FaqController.addFaq
-PATCH   /online_consulting/faq/modify       controllers.online_consulting.FaqController.modifyFaq
-PUT     /online_consulting/faq/delete       controllers.online_consulting.FaqController.deleteFaq
+GET     /tax_news/:page/:search             controllers.tax_info.TaxNewsController.getTaxNews(page: Int, search: String)
+POST    /tax_news/write                     controllers.tax_info.TaxNewsController.writeTaxNews
+PATCH   /tax_news/modify                    controllers.tax_info.TaxNewsController.modifyTaxNews
+PUT     /tax_news/delete                    controllers.tax_info.TaxNewsController.deleteTaxNews
+
+GET     /online_consulting/faq/:page            controllers.online_consulting.FaqController.getFaqs(page: Int)
+PUT     /online_consulting/faq/add              controllers.online_consulting.FaqController.addFaq
+PATCH   /online_consulting/faq/modify           controllers.online_consulting.FaqController.modifyFaq
+PUT     /online_consulting/faq/delete           controllers.online_consulting.FaqController.deleteFaq
+
+POST    /online_consulting/qna/write_question          controllers.online_consulting.QnaController.writeQuestion
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count

@@ -49,6 +49,11 @@ class Sql @Inject()(db: Database, common: Common) {
 
   def getDetail(table: String, id: Int): Map[String, Any] = {
     var result = List[Map[String, Any]]()
+    val increaseViewsQuery =
+      f"""UPDATE $table%s SET views = views + 1 WHERE id = $id%d"""
+    db.withConnection{implicit conn =>
+      SQL(increaseViewsQuery.stripMargin).executeUpdate()
+    }
     val getDetailQuery =
       f"""SELECT * FROM $table%s WHERE id = $id%d"""
     db.withConnection{implicit conn =>
