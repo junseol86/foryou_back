@@ -32,7 +32,10 @@ PUT     /online_consulting/faq/add              controllers.online_consulting.Fa
 PATCH   /online_consulting/faq/modify           controllers.online_consulting.FaqController.modifyFaq
 PUT     /online_consulting/faq/delete           controllers.online_consulting.FaqController.deleteFaq
 
+GET     /online_consulting/qna/:page/:search           controllers.online_consulting.QnaController.getQnas(page: Int, search: String)
 POST    /online_consulting/qna/write_question          controllers.online_consulting.QnaController.writeQuestion
+POST    /online_consulting/qna/read_question           controllers.online_consulting.QnaController.readQuestion
+PATCH   /online_consulting/qna/answer_question         controllers.online_consulting.QnaController.answerQuestion
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count
