@@ -50,4 +50,13 @@ class QnaController @Inject()(qnaModel: QnaModel, common: Common) extends Contro
     Ok(Json(formats).write(result));
   }
 
+  def deleteQuestion() = Action { request =>
+    def fp = new common.FromPost(request)
+    var result = Map[String, Any]()
+    result += "data" -> qnaModel.deleteQuestion(
+      fp.get("id").toInt, fp.get("selector"), fp.get("validator"), fp.get("password")
+    )
+    Ok(Json(formats).write(result));
+  }
+
 }

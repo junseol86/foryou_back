@@ -117,4 +117,31 @@ class QnaModel @Inject()(db: Database, common: Common, security: Security, sql: 
     common.returnSuccessResult(modifyResult == 1)
   }
 
+  def deleteQuestion(id: Int, selector: String, validator: String, password: String): Map[String, Any] = {
+    if (selector != "" && validator != "") {
+      //      관리자일 때
+      val authentication = userModel.authenticate(selector, validator)
+      if (authentication("success") == false) {
+        //      유저확인 실패시 종료
+        return common.returnSuccessResult(false)
+      }
+    } else {
+      //      질문을 올린 사용자일 때
+      val passwordHash = security.sha256Hashing(password)
+      var check = List[Map[String, Any]]()
+      val checkQuery = f"""SELECT password FROM qna WHERE id = $id%d"""
+      db.withConnection { implicit conn =>
+        check = SQL(
+          checkQuery.stripMargin).as(parser.*)
+      }
+      if (check.length == 0 || check(0)("qna.password") != passwordHash) {
+        return common.returnSuccessResult(false)
+      }
+    }
+
+    common.returnSuccessResult(
+      sql.deleteAContent("qna", id) == 1
+    )
+  }
+
 }

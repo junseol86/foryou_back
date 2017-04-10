@@ -36,6 +36,11 @@ GET     /online_consulting/qna/:page/:search           controllers.online_consul
 POST    /online_consulting/qna/write_question          controllers.online_consulting.QnaController.writeQuestion
 POST    /online_consulting/qna/read_question           controllers.online_consulting.QnaController.readQuestion
 PATCH   /online_consulting/qna/answer_question         controllers.online_consulting.QnaController.answerQuestion
+PUT     /online_consulting/qna/delete_question         controllers.online_consulting.QnaController.deleteQuestion
+
+GET     /forms/list             controllers.FormsController.getForms
+POST    /forms/upload           controllers.FormsController.uploadForm
+PUT     /forms/delete           controllers.FormsController.deleteForm
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count
