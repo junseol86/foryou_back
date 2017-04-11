@@ -10,6 +10,10 @@ POST    /authenticate                       controllers.account.UserController.a
 GET     /test                               controllers.TestController.test
 POST    /login                              controllers.account.UserController.login
 PUT     /autologin                          controllers.account.UserController.autoLogin
+PATCH   /change_password                    controllers.account.UserController.changePassword
+POST    /add_admin                          controllers.account.UserController.addAdmin
+
+GET     /dashboard                          controllers.DashboardController.getArticles
 
 GET     /detail/:table/:id                  controllers.CommonController.getDetail(table: String, id: Int)
 

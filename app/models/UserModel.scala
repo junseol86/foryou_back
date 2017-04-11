@@ -133,5 +133,69 @@ class UserModel @Inject()(db: Database, security: Security, common: Common) {
     resultMap
   }
 
+  def changePassword(password: String, new_password: String, selector: String, validator: String): Map[String, Any] = {
+    val authentication = authenticate(selector, validator)
+    if (authentication("success") == false) {
+      //      유저확인 실패시 종료
+      return common.returnSuccessResult(false)
+    }
+
+    val account: Map[String, String] = authentication("account").asInstanceOf[Map[String, String]]
+    val user_id = account("auth_token.user_id")
+    var checkPwResult = List[Map[String, Any]]()
+    val checkPwQuery = f"""SELECT * FROM user WHERE user_id = '$user_id%s'"""
+    db.withConnection{implicit conn =>
+      checkPwResult = SQL(
+        checkPwQuery.stripMargin).as(parser.*)
+    }
+    if (security.sha256Hashing(password + checkPwResult(0)("user.user_salt")) != checkPwResult(0)("user.user_pw")) {
+      //      패스워드가 틀렸을 시 종료
+      return common.returnSuccessResult(false)
+    }
+
+    val user_salt = security.createSalt()
+    var modifyResult: Int = 0
+    db.withConnection { implicit conn =>
+      modifyResult =
+        SQL(
+          """UPDATE user SET
+             user_salt = {user_salt}, user_pw = {user_pw}, user_modified = {user_modified}
+             WHERE user_id = {user_id}
+          """
+        ).on(
+          'user_salt -> user_salt, 'user_pw -> security.sha256Hashing(new_password + user_salt), 'user_modified ->  common.getDateFromToday(0), 'user_id -> user_id
+        ).executeUpdate()
+    }
+    common.returnSuccessResult(modifyResult == 1)
+  }
+
+  def addAdmin(user_id: String, user_pw: String, user_name: String, user_position: String, selector: String, validator: String): Map[String, Any] = {
+    val authentication = authenticate(selector, validator)
+    if (authentication("success") == false) {
+      //      유저확인 실패시 종료
+      return common.returnSuccessResult(false)
+    }
+    val user_salt = security.createSalt()
+
+    var insertResult: Any = null
+    db.withConnection { implicit conn =>
+      insertResult =
+        SQL(
+          """INSERT INTO user (
+            user_id, user_salt, user_pw, user_name, user_position, user_created, user_modified
+            ) values (
+            {user_id}, {user_salt}, {user_pw}, {user_name}, {user_position}, {user_created}, {user_modified}
+            )
+          """
+        ).on('user_id -> user_id, 'user_salt -> user_salt, 'user_pw -> security.sha256Hashing(user_pw + user_salt),
+          'user_name -> user_name, 'user_position -> user_position, 'user_created -> common.getDateFromToday(0), 'user_modified -> common.getDateFromToday(0)).executeInsert()
+    }
+    insertResult match {
+      //        에러시 종료
+      case Some(i: Long) => return common.returnSuccessResult(true)
+      case None => return common.returnSuccessResult(false)
+    }
+  }
+
 }
 

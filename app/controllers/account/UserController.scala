@@ -48,4 +48,29 @@ class UserController @Inject()(userModel: UserModel, common: Common) extends Con
     Ok(Json(formats).write(result))
   }
 
+  def changePassword() = Action { request =>
+    def fp = new common.FromPost(request)
+    val password = fp.get("password")
+    val new_password = fp.get("new_password")
+    val selector = fp.get("selector")
+    val validator = fp.get("validator")
+
+    var result = Map[String, Any]()
+    result += "data" -> userModel.changePassword(password, new_password, selector, validator)
+    Ok(Json(formats).write(result))
+  }
+
+  def addAdmin() = Action { request =>
+    def fp = new common.FromPost(request)
+    val user_id = fp.get("user_id")
+    val user_pw = fp.get("user_pw").trim
+    val user_name = fp.get("user_name")
+    val user_position = fp.get("user_position")
+    val selector = fp.get("selector")
+    val validator = fp.get("validator")
+
+    var result = Map[String, Any]()
+    result += "data" -> userModel.addAdmin(user_id, user_pw, user_name, user_position, selector, validator)
+    Ok(Json(formats).write(result))
+  }
 }
